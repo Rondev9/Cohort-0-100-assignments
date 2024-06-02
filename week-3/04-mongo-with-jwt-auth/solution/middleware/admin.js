@@ -20,7 +20,6 @@ function adminMiddleware(req, res, next) {
             msg: "Incorrect inputs"
         })
     }
-    
 }
 
 module.exports = adminMiddleware;

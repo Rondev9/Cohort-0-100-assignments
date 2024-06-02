@@ -5,7 +5,7 @@ const adminRouter = require("./routes/admin")
 const userRouter = require("./routes/user");
 // const mongoose = require('mongoose');
 
-// mongoose.connect("mongodb+srv://ganesh8497993502:U7CHybE46KR5tBph@cluster0.mrpzhbs.mongodb.net/course_selling_app")
+// mongoose.connect("your mongo connection string")
 
 // Middleware for parsing request bodies
 app.use(bodyParser.json());
