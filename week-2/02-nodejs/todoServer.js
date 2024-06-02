@@ -39,11 +39,81 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require("express");
+const bodyParser = require("body-parser");
+const e = require("express");
+
+const app = express();
+
+app.use(bodyParser.json());
+
+// const port = 3000;
+
+let todos = [];
+
+app.get("/todos", (req, res) => {
+  res.status(200).json(todos);
+});
+
+app.get("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  const todo = todos.find((todo) => todo.id == id);
+  console.log(todo);
+  if (todo) {
+    res.status(200).json(todo);
+  } else {
+    res.status(404).send("Todo not found");
+  }
+});
+
+app.post("/todos", (req, res) => {
+  const reqBody = req.body;
+  if (reqBody.title && reqBody.description) {
+    const todo = {
+      id: todos.length + 1,
+      title: reqBody.title,
+      completed: reqBody.completed,
+      description: reqBody.description,
+    };
+    if (todo) {
+      todos.push(todo);
+      res.status(201).json({ id: todo.id });
+    } else {
+      res.status(500).send("Failed to create todo");
+    }
+  }
+});
+
+
+app.put('/todos/:id', (req, res) => {
+  const reqBody = req.body;
+  const todo = todos.find((todo) => todo.id == req.params.id);
+  console.log(todo);
+  if(todo) {
+    todo.title = reqBody.title != undefined || null ? reqBody.title : todo.title;
+    todo.completed = reqBody.completed != undefined || null ? reqBody.completed : todo.completed;
+    todo.description = reqBody.description != undefined || null ? reqBody.description : todo.description;
+    res.status(200).json(todo);
+  } else {
+    res.status(404).send("Todo not found");
+  }
+});
+
+app.delete('/todos/:id', (req, res) => {
+    const id = req.params.id;
+    const todo = todos.find((todo) => todo.id == id);
+    const index = todos.indexOf(todo);
+    if(todo) {
+      todos.splice(index, 1);
+      res.status(200).send("Todo deleted");
+    } else {
+      res.status(404).send("Todo not found");
+    }
+});
+
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// });
+
+module.exports = app;

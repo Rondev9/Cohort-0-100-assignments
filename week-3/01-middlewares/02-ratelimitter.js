@@ -12,9 +12,29 @@ const app = express();
 // clears every one second
 
 let numberOfRequestsForUser = {};
+let requestCount = 0;
 setInterval(() => {
     numberOfRequestsForUser = {};
+    requestCount = 0;
 }, 1000)
+
+app.use((req, res, next) => {
+  requestCount++;
+  if(numberOfRequestsForUser.userId == null || undefined) {
+    numberOfRequestsForUser = {
+      userId: req.headers['user-id'],
+      requestCount: requestCount
+    }
+  } else {
+    numberOfRequestsForUser.requestCount = requestCount;
+  }
+  console.log("numberOfRequestsForUser:", numberOfRequestsForUser);
+  if(numberOfRequestsForUser.requestCount > 5) {
+    res.status(404).json({ message: 'Rate limit exceeded' });
+  } else {
+    next();
+  }
+})
 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
@@ -23,5 +43,9 @@ app.get('/user', function(req, res) {
 app.post('/user', function(req, res) {
   res.status(200).json({ msg: 'created dummy user' });
 });
+
+// app.listen(3000, () => {
+//   console.log("Server is running on port 3000");
+// })
 
 module.exports = app;

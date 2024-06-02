@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const adminRouter = require("./routes/admin")
 const userRouter = require("./routes/user");
+// const mongoose = require('mongoose');
+
+// mongoose.connect("mongodb+srv://ganesh8497993502:U7CHybE46KR5tBph@cluster0.mrpzhbs.mongodb.net/course_selling_app")
 
 // Middleware for parsing request bodies
 app.use(bodyParser.json());
@@ -10,6 +13,7 @@ app.use("/admin", adminRouter)
 app.use("/user", userRouter)
 
 const PORT = 3000;
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
